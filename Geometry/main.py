@@ -10,9 +10,9 @@ def genPoint(length, method = "Homogeneous"):
     else:
         P = np.random.randn(length)
         if method == "Spherical":
+            # Make sure that P is not the origin
             P = P / np.sqrt(np.dot(P, P))
         return P
-
 
 def distance(P1, P2, method = "Homogeneous"):
     import numpy as np
@@ -26,7 +26,6 @@ def distance(P1, P2, method = "Homogeneous"):
         P1[len(P1) - 1] = -P1[len(P1) - 1]
         return math.acosh(-np.dot(P1,P2))
     elif method == "Spherical":
-        # check they are on unit sphere
         return math.acos(np.dot(P1,P2))
     else:
         # check the last coordinate is 1
@@ -76,8 +75,22 @@ distance(UP1, UP2)
 ###################
 # Spherical
 ###################
+P1 = np.asarray([3, 4, 5, 1])
+P2 = np.asarray([1, 2, 3, 1])
 
+P1 = P1 / np.sqrt(P1.dot(P1))
+P2 = P2 / np.sqrt(P2.dot(P2))
 
+distance(P1, P2, method = "Spherical")
+
+U = orthoTrans(4, method = "Spherical")
+UP1 = U.dot(P1)
+UP2 = U.dot(P2)
+distance(UP1, UP2, method = "Spherical")
+
+###################
+# Hyperbolic
+###################
 
 
 
