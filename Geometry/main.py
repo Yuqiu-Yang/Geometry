@@ -14,6 +14,9 @@ def genPoint(n, method = "Homogeneous"):
         P = P / np.sqrt(np.dot(P, P))
         return P
     else:
+        # when method is Homogeneous
+        # n is the length of the desired 
+        # vector - 1 
         tempP = np.zeros(n + 1)
         tempP[0:-1] = P
         tempP[-1] = 1
@@ -32,7 +35,6 @@ def distance(P1, P2, method = "Homogeneous"):
     elif method == "Spherical":
         return math.acos(np.dot(P1,P2))
     else:
-        # check the last coordinate is 1
         return np.sqrt(np.dot(P1-P2,P1-P2))
 
 def orthoTrans(n, method = "Homogeneous"):
@@ -45,6 +47,8 @@ def orthoTrans(n, method = "Homogeneous"):
     if method == "Spherical":
         return Q
     else:
+        # when method is Homogeneous
+        # n is the length of the vector - 1
         tempQ = np.zeros((n + 1, n + 1))
         tempQ[:-1,:-1] = Q
         tempQ[n, n] = 1
@@ -55,14 +59,13 @@ def translation(n):
     U = np.eye(n + 1)
     U[0:-1, -1] = np.random.randn(n)
     return U
-    
 
 ###################
 # Euclidean 
 ###################
+P1 = genPoint(3)
+P2 = genPoint(3)
 
-P1 = [3, 4, 5, 1]
-P2 = [1, 2, 3, 1]
 distance(P1, P2)
 
 # Orthogonal transformation
@@ -80,11 +83,9 @@ distance(UP1, UP2)
 ###################
 # Spherical
 ###################
-P1 = np.asarray([3, 4, 5, 1])
-P2 = np.asarray([1, 2, 3, 1])
+P1 = genPoint(4, method = "Spherical")
+P2 = genPoint(4, method = "Spherical")
 
-P1 = P1 / np.sqrt(P1.dot(P1))
-P2 = P2 / np.sqrt(P2.dot(P2))
 
 distance(P1, P2, method = "Spherical")
 
@@ -96,6 +97,9 @@ distance(UP1, UP2, method = "Spherical")
 ###################
 # Hyperbolic
 ###################
+P1 = genPoint(4, method = "Hyperbolic")
+P2 = genPoint(4, method = "Hyperbolic")
+distance(P1, P2, method = "Hyperbolic")
 
 
 
@@ -103,5 +107,6 @@ distance(UP1, UP2, method = "Spherical")
 
 
 
-       
+
+
 
