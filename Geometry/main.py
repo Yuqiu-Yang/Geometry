@@ -39,16 +39,23 @@ def distance(P1, P2, method = "Homogeneous"):
 
 def orthoTrans(n, method = "Homogeneous"):
     import numpy as np
-    from scipy.linalg import qr
-    H = np.random.randn(n, n)
-    Q, R = qr(H)
-    #Q.dot(Q.T)
-    #Q.T.dot(Q)
+    from scipy.stats import ortho_group
+    from scipy.stats import special_ortho_group
     if method == "Spherical":
+        Q = ortho_group.rvs(n)
         return Q
+    elif method == "Hyperbolic":
+        # generate pure rotation which 
+        # leaves the time coordinate unchanged
+        Q = special_ortho_group.rvs(n - 1)
+        tempQ = np.zeros((n + 1, n + 1))
+        tempQ[:-1,:-1] = Q
+        tempQ[n, n] = 1
+        return tempQ
     else:
         # when method is Homogeneous
         # n is the length of the vector - 1
+        Q = ortho_group.rvs(n)
         tempQ = np.zeros((n + 1, n + 1))
         tempQ[:-1,:-1] = Q
         tempQ[n, n] = 1
@@ -65,9 +72,9 @@ def translation(n):
 ###################
 P1 = genPoint(3)
 P2 = genPoint(3)
-
+print(P1)
+print(P2)
 distance(P1, P2)
-
 # Orthogonal transformation
 U = orthoTrans(3)
 UP1 = U.dot(P1)
@@ -79,6 +86,10 @@ U = translation(3)
 UP1 = U.dot(P1)
 UP2 = U.dot(P2)
 distance(UP1, UP2)
+
+
+
+
 
 ###################
 # Spherical
