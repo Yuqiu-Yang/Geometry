@@ -83,7 +83,13 @@ def boost(beta):
     B[0:-1, 0:-1] *= ((gamma - 1) / Beta) 
     B[0:-1, 0:-1] += np.eye(3)
     return B
-   
+  
+    
+###################
+# Test
+###################
+
+
 ###################
 # Euclidean 
 ###################
@@ -103,8 +109,6 @@ U = translation(3)
 UP1 = U.dot(P1)
 UP2 = U.dot(P2)
 distance(UP1, UP2)
-
-
 
 
 
@@ -136,11 +140,33 @@ distance(UP1, UP2, method = "Hyperbolic")
 
 
 beta = np.zeros((1,3))
-beta[0,:] = 0.9 * genPoint(3, method = "Spherical")
+beta[0,:] = (2*np.random.rand(1)-1) * genPoint(3, method = "Spherical")
 U = boost(beta)
 UP1 = U.dot(P1)
 UP2 = U.dot(P2)
 distance(UP1, UP2, method = "Hyperbolic")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 np.linalg.det(U)
 a = np.eye(4)
