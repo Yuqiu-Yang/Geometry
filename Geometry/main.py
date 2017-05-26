@@ -47,19 +47,17 @@ def orthoTrans(n, method = "Homogeneous"):
     elif method == "Hyperbolic":
         # generate pure rotation which 
         # leaves the time coordinate unchanged
-        Q = special_ortho_group.rvs(n - 1)
-        tempQ = np.zeros((n + 1, n + 1))
-        tempQ[:-1,:-1] = Q
-        tempQ[n, n] = 1
-        return tempQ
+        Q = np.zeros((n, n))
+        Q[:-1,:-1] = special_ortho_group.rvs(n - 1)
+        Q[- 1, - 1] = 1
+        return Q
     else:
         # when method is Homogeneous
         # n is the length of the vector - 1
-        Q = ortho_group.rvs(n)
-        tempQ = np.zeros((n + 1, n + 1))
-        tempQ[:-1,:-1] = Q
-        tempQ[n, n] = 1
-        return tempQ
+        Q = np.zeros((n + 1, n + 1))
+        Q[:-1,:-1] = ortho_group.rvs(n)
+        Q[n, n] = 1
+        return Q
 
 def translation(n):
     import numpy as np
