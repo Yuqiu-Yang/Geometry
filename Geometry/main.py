@@ -1,6 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-
+###################
+# Some useful functions
+###################
 def genPoint(n, method = "Homogeneous"):
     import numpy as np
     P = np.random.randn(n)
@@ -65,6 +67,22 @@ def translation(n):
     U[0:-1, -1] = np.random.randn(n)
     return U
 
+def boost(gamma, beta):
+    # gamma >= 1
+    # beta 1 by 3 ndarray whose norm is < 1 
+    import numpy as np
+    Beta = beta.dot(beta.transpose())
+    B = np.zeros((4,4))
+    B[3,3] = gamma
+    B[3, 0:-1] = -gamma * beta
+    B[0:-1, 3] = B[3, 0:-1].transpose()
+    B[0:-1,0:-1] = np.matmul(beta.transpose(), beta)
+    B[0:-1, 0:-1] *= ((gamma - 1) / Beta) 
+    B[0:-1, 0:-1] += np.eye(3)
+    return B
+    
+
+    
 ###################
 # Euclidean 
 ###################
