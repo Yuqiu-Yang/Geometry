@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 # Some useful functions
 ###################
 def genPoint(n, method = "Homogeneous"):
+    # Generate random points in R^n, S^(n-1), or L^(n-1)
     import numpy as np
     P = np.random.randn(n)
     if method == "Hyperbolic":
@@ -26,9 +27,9 @@ def genPoint(n, method = "Homogeneous"):
 
 
 def distance(P1, P2, method = "Homogeneous"):
+    # Find the distance between two points
     import numpy as np
     import math
-    # Find the distance between two points
     P1 = np.asarray(P1)
     P2 = np.asarray(P2)
     if method == "Hyperbolic":
@@ -40,6 +41,7 @@ def distance(P1, P2, method = "Homogeneous"):
         return np.sqrt(np.dot(P1-P2,P1-P2))
 
 def orthoTrans(n, method = "Homogeneous"):
+    # Generate elements in O(n) and SO(n) (hyperbolic)
     import numpy as np
     from scipy.stats import ortho_group
     from scipy.stats import special_ortho_group
@@ -67,11 +69,11 @@ def translation(n):
     U[0:-1, -1] = np.random.randn(n)
     return U
 
-def boost(gamma, beta):
-    # gamma >= 1
+def boost(beta):
     # beta 1 by 3 ndarray whose norm is < 1 
     import numpy as np
     Beta = beta.dot(beta.transpose())
+    gamma = 1/np.sqrt(1-Beta)
     B = np.zeros((4,4))
     B[3,3] = gamma
     B[3, 0:-1] = -gamma * beta
@@ -125,7 +127,6 @@ distance(UP1, UP2, method = "Spherical")
 P1 = genPoint(4, method = "Hyperbolic")
 P2 = genPoint(4, method = "Hyperbolic")
 distance(P1, P2, method = "Hyperbolic")
-
 
 
 
