@@ -33,8 +33,9 @@ def distance(P1, P2, method = "Homogeneous"):
     P1 = np.asarray(P1)
     P2 = np.asarray(P2)
     if method == "Hyperbolic":
-        P1[len(P1) - 1] = -P1[len(P1) - 1]
-        return math.acosh(-np.dot(P1,P2))
+        eta = np.eye(len(P1))
+        eta[-1,-1] = -1
+        return math.acosh(abs(np.dot(P1,eta).dot(P2)))
     elif method == "Spherical":
         return math.acos(np.dot(P1,P2))
     else:
@@ -127,6 +128,28 @@ distance(UP1, UP2, method = "Spherical")
 P1 = genPoint(4, method = "Hyperbolic")
 P2 = genPoint(4, method = "Hyperbolic")
 distance(P1, P2, method = "Hyperbolic")
+
+U = orthoTrans(4, method = "Hyperbolic")
+UP1 = U.dot(P1)
+UP2 = U.dot(P2)
+distance(UP1, UP2, method = "Hyperbolic")
+
+
+beta = np.zeros((1,3))
+beta[0,:] = 0.9 * genPoint(3, method = "Spherical")
+U = boost(beta)
+UP1 = U.dot(P1)
+UP2 = U.dot(P2)
+distance(UP1, UP2, method = "Hyperbolic")
+
+np.linalg.det(U)
+a = np.eye(4)
+a[3,3] = -1
+np.matmul(np.matmul(U.transpose(),a), U)
+
+
+
+
 
 
 
