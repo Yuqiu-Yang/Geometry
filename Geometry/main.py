@@ -80,9 +80,7 @@ def boost(gamma, beta):
     B[0:-1, 0:-1] *= ((gamma - 1) / Beta) 
     B[0:-1, 0:-1] += np.eye(3)
     return B
-    
-
-    
+   
 ###################
 # Euclidean 
 ###################
