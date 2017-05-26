@@ -1,28 +1,32 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
-def genPoint(length, method = "Homogeneous"):
+def genPoint(n, method = "Homogeneous"):
     import numpy as np
-    P = np.zeros(length)
+    P = np.random.randn(n)
     if method == "Hyperbolic":
-        P[0 : -1] = np.random.randn(length - 1)
         P[-1] = np.sqrt(1 + np.dot(P[0 : -1], P[0 : -1]))
         return P
-    else:
-        P = np.random.randn(length)
-        if method == "Spherical":
-            # Make sure that P is not the origin
-            P = P / np.sqrt(np.dot(P, P))
+    elif method == "Spherical":
+        # Make sure that P is not the origin
+        while all(P == 0):
+            P = np.random.randn(n)
+        P = P / np.sqrt(np.dot(P, P))
         return P
+    else:
+        tempP = np.zeros(n + 1)
+        tempP[0:-1] = P
+        tempP[-1] = 1
+        return tempP
+
 
 def distance(P1, P2, method = "Homogeneous"):
     import numpy as np
     import math
     # Find the distance between two points
-    # P1 and P2 
     P1 = np.asarray(P1)
     P2 = np.asarray(P2)
     if method == "Hyperbolic":
-        # check they are on unit hyperboloid
         P1[len(P1) - 1] = -P1[len(P1) - 1]
         return math.acosh(-np.dot(P1,P2))
     elif method == "Spherical":
@@ -56,6 +60,7 @@ def translation(n):
 ###################
 # Euclidean 
 ###################
+
 P1 = [3, 4, 5, 1]
 P2 = [1, 2, 3, 1]
 distance(P1, P2)
