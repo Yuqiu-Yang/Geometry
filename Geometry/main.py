@@ -1,5 +1,4 @@
 import numpy as np
-import pandas as pd
 from prettytable import PrettyTable
 ###################
 # Some useful functions
@@ -94,6 +93,7 @@ def test(P1,P2, trans,method, precision = 3):
     try:
         d = distance(math.inf,math.inf, method = method)
         if not(math.isnan(d)):
+            return "Did not pass."
             raise ValueError("distance function seems to return a constant")
     except:
         pass
@@ -104,9 +104,9 @@ def test(P1,P2, trans,method, precision = 3):
     d1 = round(d1, precision)
     d2 = round(d2, precision)
     if d1 == d2:
-        return "Pass the test."
+        return "Passed."
     else:
-        return "Did not pass the test."
+        return "Did not pass."
 
 
 ###################
@@ -147,7 +147,7 @@ t.add_row(['TOP2', TOP2])
 print(t)
 # The table that shows the distances and if they passed the test
 t1 = PrettyTable(['Original', 'Orthogonal', 'Translation',
-                  'Orthogonal + Translation', 'Translation + Orthogonal'])
+                  'Ortho + Translation', 'Translation + Ortho'])
 t1.add_row([round(distance(P1,P2),3),
             round(distance(OP1,OP2),3),
             round(distance(TP1,TP2),3),
@@ -234,8 +234,8 @@ t.add_row(['TOP1', TOP1])
 t.add_row(['TOP2', TOP2])
 print(t)
 # The table that shows the distances and if they passed the test
-t1 = PrettyTable(['Original', 'Orthogonal', 'Translation',
-                  'Orthogonal + Translation', 'Translation + Orthogonal'])
+t1 = PrettyTable(['Original', 'Orthogonal', 'Boost',
+                  'Orthogonal + Boost', 'Boost + Orthogonal'])
 t1.add_row([round(distance(P1,P2, method = "Hyperbolic"),3),
             round(distance(OP1,OP2, method = "Hyperbolic"),3),
             round(distance(TP1,TP2, method = "Hyperbolic"),3),
@@ -247,4 +247,3 @@ t1.add_row(['',
             test(P1,P2, OT,"Hyperbolic"),
             test(P1,P2, TO,"Hyperbolic")])
 print(t1)
-
