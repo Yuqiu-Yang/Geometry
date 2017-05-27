@@ -234,8 +234,8 @@ t.add_row(['TOP1', TOP1])
 t.add_row(['TOP2', TOP2])
 print(t)
 # The table that shows the distances and if they passed the test
-t1 = PrettyTable(['Original', 'Orthogonal', 'Boost',
-                  'Orthogonal + Boost', 'Boost + Orthogonal'])
+t1 = PrettyTable(['Original', 'Rotation', 'Boost',
+                  'Rotation + Boost', 'Boost + Rotation'])
 t1.add_row([round(distance(P1,P2, method = "Hyperbolic"),3),
             round(distance(OP1,OP2, method = "Hyperbolic"),3),
             round(distance(TP1,TP2, method = "Hyperbolic"),3),
