@@ -1,5 +1,6 @@
 import numpy as np
-import matplotlib.pyplot as plt
+import pandas as pd
+from prettytable import PrettyTable
 ###################
 # Some useful functions
 ###################
@@ -84,10 +85,28 @@ def boost(beta):
     B[0:-1, 0:-1] += np.eye(3)
     return B
   
-    
 ###################
 # Test
 ###################
+def test(P1,P2, trans,method, precision = 3):
+    import numpy as np
+    import math
+    try:
+        d = distance(math.inf,math.inf, method = method)
+        if not(math.isnan(d)):
+            raise ValueError("distance function seems to return a constant")
+    except:
+        pass
+    d1 = distance(P1, P2, method = method)
+    UP1 = trans.dot(P1)
+    UP2 = trans.dot(P2)
+    d2 = distance(UP1, UP2, method = method)
+    d1 = round(d1, precision)
+    d2 = round(d2, precision)
+    if d1 == d2:
+        return "Pass the test."
+    else:
+        return "Did not pass the test."
 
 
 ###################
@@ -95,21 +114,51 @@ def boost(beta):
 ###################
 P1 = genPoint(3)
 P2 = genPoint(3)
-print(P1)
-print(P2)
-distance(P1, P2)
 # Orthogonal transformation
-U = orthoTrans(3)
-UP1 = U.dot(P1)
-UP2 = U.dot(P2)
-distance(UP1, UP2)
-
-# Translation 
-U = translation(3)
-UP1 = U.dot(P1)
-UP2 = U.dot(P2)
-distance(UP1, UP2)
-
+O = orthoTrans(3)
+# Translation
+T = translation(3)
+# Translation followed by an Orthogonal transformation
+OT = O.dot(T)
+# Orthogonal transformation followed by a Translation
+TO = T.dot(O)
+# 
+OP1 = O.dot(P1)
+OP2 = O.dot(P2)
+TP1 = T.dot(P1)
+TP2 = T.dot(P2)
+OTP1 = OT.dot(P1)
+OTP2 = OT.dot(P2)
+TOP1 = TO.dot(P1)
+TOP2 = TO.dot(P2)
+# Construct tables 
+# The table that shows the coordinates of these points
+t = PrettyTable(['', 'Coordinate'])
+t.add_row(['P1', P1])
+t.add_row(['P2', P2])
+t.add_row(['OP1', OP1])
+t.add_row(['OP2', OP2])
+t.add_row(['TP1', TP1])
+t.add_row(['TP2', TP2])
+t.add_row(['OTP1', OTP1])
+t.add_row(['OTP2', OTP2])
+t.add_row(['TOP1', TOP1])
+t.add_row(['TOP2', TOP2])
+print(t)
+# The table that shows the distances and if they passed the test
+t1 = PrettyTable(['Original', 'Orthogonal', 'Translation',
+                  'Orthogonal + Translation', 'Translation + Orthogonal'])
+t1.add_row([round(distance(P1,P2),3),
+            round(distance(OP1,OP2),3),
+            round(distance(TP1,TP2),3),
+            round(distance(OTP1,OTP2),3),
+            round(distance(TOP1,TOP2),3)])
+t1.add_row(['',
+            test(P1,P2, O,'Homogenous'),
+            test(P1,P2, T,'Homogenous'),
+            test(P1,P2, OT,'Homogenous'),
+            test(P1,P2, TO,'Homogenous')])
+print(t1)
 
 
 ###################
@@ -117,71 +166,85 @@ distance(UP1, UP2)
 ###################
 P1 = genPoint(4, method = "Spherical")
 P2 = genPoint(4, method = "Spherical")
+O = orthoTrans(4, method = "Spherical")
+O1 = orthoTrans(4, method = "Spherical")
 
+OP1 = O.dot(P1)
+OP2 = O.dot(P2)
+O1P1 = O1.dot(P1)
+O1P2 = O1.dot(P2)
 
-distance(P1, P2, method = "Spherical")
+# Construct tables 
+# The table that shows the coordinates of these points
+t = PrettyTable(['', 'Coordinate'])
+t.add_row(['P1', P1])
+t.add_row(['P2', P2])
+t.add_row(['OP1', OP1])
+t.add_row(['OP2', OP2])
+t.add_row(['O1P1', O1P1])
+t.add_row(['O1P2', O1P2])
+print(t)
+# The table that shows the distances and if they passed the test
+t1 = PrettyTable(['Original', 'Orthogonal', 'Orthogonal1'])
+t1.add_row([round(distance(P1,P2, method = "Spherical"),3),
+            round(distance(OP1,OP2, method = "Spherical"),3),
+            round(distance(O1P1,O1P2, method = "Spherical"),3)])
+t1.add_row(['',
+            test(P1,P2, O,"Spherical"),
+            test(P1,P2, O1,"Spherical")])
+print(t1)
 
-U = orthoTrans(4, method = "Spherical")
-UP1 = U.dot(P1)
-UP2 = U.dot(P2)
-distance(UP1, UP2, method = "Spherical")
 
 ###################
 # Hyperbolic
 ###################
 P1 = genPoint(4, method = "Hyperbolic")
 P2 = genPoint(4, method = "Hyperbolic")
-distance(P1, P2, method = "Hyperbolic")
-
-U = orthoTrans(4, method = "Hyperbolic")
-UP1 = U.dot(P1)
-UP2 = U.dot(P2)
-distance(UP1, UP2, method = "Hyperbolic")
-
-
+# Pure rotation
+O = orthoTrans(4, method = "Hyperbolic")
+# Pure boost
 beta = np.zeros((1,3))
 beta[0,:] = (2*np.random.rand(1)-1) * genPoint(3, method = "Spherical")
-U = boost(beta)
-UP1 = U.dot(P1)
-UP2 = U.dot(P2)
-distance(UP1, UP2, method = "Hyperbolic")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-np.linalg.det(U)
-a = np.eye(4)
-a[3,3] = -1
-np.matmul(np.matmul(U.transpose(),a), U)
-
-
-
-
-
-
-
-
-
-
-
-
+T = boost(beta)
+# Boost followed by a rotation
+OT = O.dot(T)
+# Rotation followed by a boost
+TO = T.dot(O)
+#
+OP1 = O.dot(P1)
+OP2 = O.dot(P2)
+TP1 = T.dot(P1)
+TP2 = T.dot(P2)
+OTP1 = OT.dot(P1)
+OTP2 = OT.dot(P2)
+TOP1 = TO.dot(P1)
+TOP2 = TO.dot(P2)
+# Construct tables 
+# The table that shows the coordinates of these points
+t = PrettyTable(['', 'Coordinate'])
+t.add_row(['P1', P1])
+t.add_row(['P2', P2])
+t.add_row(['OP1', OP1])
+t.add_row(['OP2', OP2])
+t.add_row(['TP1', TP1])
+t.add_row(['TP2', TP2])
+t.add_row(['OTP1', OTP1])
+t.add_row(['OTP2', OTP2])
+t.add_row(['TOP1', TOP1])
+t.add_row(['TOP2', TOP2])
+print(t)
+# The table that shows the distances and if they passed the test
+t1 = PrettyTable(['Original', 'Orthogonal', 'Translation',
+                  'Orthogonal + Translation', 'Translation + Orthogonal'])
+t1.add_row([round(distance(P1,P2, method = "Hyperbolic"),3),
+            round(distance(OP1,OP2, method = "Hyperbolic"),3),
+            round(distance(TP1,TP2, method = "Hyperbolic"),3),
+            round(distance(OTP1,OTP2, method = "Hyperbolic"),3),
+            round(distance(TOP1,TOP2, method = "Hyperbolic"),3)])
+t1.add_row(['',
+            test(P1,P2, O,"Hyperbolic"),
+            test(P1,P2, T,"Hyperbolic"),
+            test(P1,P2, OT,"Hyperbolic"),
+            test(P1,P2, TO,"Hyperbolic")])
+print(t1)
 
